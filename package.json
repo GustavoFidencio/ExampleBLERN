@@ -14,7 +14,8 @@
     "buffer": "^6.0.3",
     "react": "19.1.0",
     "react-native": "0.80.0",
-    "react-native-ble-manager": "^12.1.5"
+    "react-native-ble-manager": "^12.1.5",
+    "react-native-ble-plx": "dotintent/react-native-ble-plx"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
