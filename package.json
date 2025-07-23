@@ -12,10 +12,12 @@
   "dependencies": {
     "@react-native/new-app-screen": "0.80.0",
     "buffer": "^6.0.3",
+    "md5": "^2.3.0",
     "react": "19.1.0",
     "react-native": "0.80.0",
     "react-native-ble-manager": "^12.1.5",
-    "react-native-ble-plx": "dotintent/react-native-ble-plx"
+    "react-native-ble-plx": "github:dotintent/react-native-ble-plx",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
