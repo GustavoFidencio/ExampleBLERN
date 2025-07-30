@@ -176,7 +176,7 @@ export const App = () => {
                 t: token
             };
 
-            const fullPayload = `spt=${JSON.stringify(obj)}`;
+            const fullPayload = `spr=${JSON.stringify(obj)}`;
             const payloadBuffer = Buffer.from(fullPayload, 'utf-8');
             const base64Data = payloadBuffer.toString('base64');
 
@@ -437,35 +437,43 @@ export const App = () => {
                     return;
                 }
 
-                if (characteristic?.value) {
-                    const buffer = Buffer.from(characteristic.value, 'base64');
-                    const mensagem = new TextDecoder().decode(buffer);
-                    console.log("[BLE] 📥 Notificação recebida:", mensagem);
-                } else {
-                    console.warn("[BLE] ⚠️ Característica notificada, mas sem valor.");
-                }
+
+                
+                console.log(atob(characteristic.value));
+                console.log(characteristic);
+                
+
+
+                
+                // if (characteristic?.value) {
+                //     const buffer = Buffer.from(characteristic.value, 'base64');
+                //     const mensagem = new TextDecoder().decode(buffer);
+                //     console.log("[BLE] 📥 Notificação recebida:", mensagem);
+                // } else {
+                //     console.warn("[BLE] ⚠️ Característica notificada, mas sem valor.");
+                // }
             });
 
 
             console.log(device);
 
-            await plxManager.writeDescriptorForDevice(
-                device.id,
-                '0000181c-0000-1000-8000-00805f9b34fb', // serviceUUID
-                '00002a90-0000-1000-8000-00805f9b34fb', // characteristicUUID
-                '00002902-0000-1000-8000-00805f9b34fb', // descriptorUUID
-                Buffer.from([0x01, 0x00]).toString('base64') // ENABLE_NOTIFICATION_VALUE
+            // await plxManager.writeDescriptorForDevice(
+            //     device.id,
+            //     '0000181c-0000-1000-8000-00805f9b34fb', // serviceUUID
+            //     '00002a90-0000-1000-8000-00805f9b34fb', // characteristicUUID
+            //     '00002902-0000-1000-8000-00805f9b34fb', // descriptorUUID
+            //     Buffer.from([0x01, 0x00]).toString('base64') // ENABLE_NOTIFICATION_VALUE
 
-            )
-                // await device.writeDescriptorForDevice(
-                // )
-                .then((val) => {
-                    console.log("deu no,", val);
+            // )
+            //     // await device.writeDescriptorForDevice(
+            //     // )
+            //     .then((val) => {
+            //         console.log("deu no,", val);
 
-                })
-                .catch(err => {
-                    console.log("errrrr", err);
-                })
+            //     })
+            //     .catch(err => {
+            //         console.log("errrrr", err);
+            //     })
 
             console.log("[BLE] ✅ Monitoramento iniciado.");
 
@@ -476,17 +484,29 @@ export const App = () => {
                 if (characteristics[0].isNotifying) {
 
                     try {
-                        const payload = Buffer.from("getSN", "utf8").toString("base64");
+                        const payload = Buffer.from("getPD", "utf8").toString("base64");
 
-                        await device.writeCharacteristicWithResponseForService(payload);
+                        // await device.writeCharacteristicWithResponseForService(payload);
                         // await writeChar.writeCharacteristicWithResponseForService(payload);
+
+
+                        await device.writeCharacteristicWithResponseForService(
+                            service.uuid,
+                            writeChar.uuid,
+                            payload
+                        );
+
+                        setTimeout(() => {
+                            sendWifiInfo(device, service.uuid, writeChar.uuid)
+                        }, 2000);
+
                         console.log("[BLE] ✉️ Comando 'getSN' enviado.");
                     } catch (err) {
                         console.error("[BLE] ❌ Erro ao enviar 'getSN':", err.message);
                     }
 
                 }
-            }, 10000);
+            }, 2000);
 
         } catch (monitorError) {
             console.error("[BLE] ❌ Falha ao iniciar monitoramento:", monitorError.message);
